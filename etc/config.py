@@ -1,4 +1,4 @@
-## Path Settings
+## Path Settings all need to end with /
 fd_tone_notify_path = ""
 fd_tone_notify_extension_path = ""
 local_audio_path = ""
@@ -123,11 +123,11 @@ zello_settings = {
 }
 
 local_cleanup_settings = {
-    "enabled": 7,
+    "enabled": 0,
     "cleanup_days": 7
 }
 
 remote_cleanup_settings = {
-    "enabled": 7,
+    "enabled": 0,
     "cleanup_days": 7
 }
