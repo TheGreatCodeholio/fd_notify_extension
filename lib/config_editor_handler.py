@@ -145,7 +145,7 @@ def add_external_command():
 
 
 def generate_mqtt_config():
-    fd_config = open(config.fd_tone_notify_extension_path + 'var/config/default.json')
+    fd_config = open(config.fd_tone_notify_path + 'var/config/default.json')
     fd_data = json.load(fd_config)
 
     mqtt_client_config = open(config.fd_tone_notify_extension_path + 'etc/mqtt_client_config.json')

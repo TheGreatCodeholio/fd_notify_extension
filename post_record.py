@@ -51,6 +51,7 @@ args = parser.parse_args()
 logger.info("Post Record Script Start")
 threads = []
 
+
 def zello_init(config, mp3_local_path):
     config.token = zello.zello_create_token(config)
     opus_file = zello.zello_convert(mp3_local_path)
@@ -96,9 +97,17 @@ try:
                 local_audio_path + mp3_new_name.replace(".mp3", ".wav"))
     shutil.move(mp3_fd_notify_path, local_audio_path + mp3_new_name)
 
+    if config.mp3_remove_silence_settings["enabled"] == 1:
+        logger.debug("Remove Silence Enabled")
+        mp3.remove_silence(int(ts), tone_name.lower().replace(" ", "_"),
+                           local_audio_path + mp3_new_name.replace(".mp3", ".wav"))
+    else:
+        logger.debug("Remove Silence Disabled")
+
     if config.broadcastify_calls_settings["enabled"] == 1:
         logger.debug("Broadcastify Calls Enabled")
-        bcfy = Thread(target=broadcastify.post_call, args=(int(ts), local_audio_path + mp3_new_name.replace(".mp3", ".wav")))
+        bcfy = Thread(target=broadcastify.post_call,
+                      args=(int(ts), local_audio_path + mp3_new_name.replace(".mp3", ".wav")))
         bcfy.start()
         threads.append(bcfy)
     else:

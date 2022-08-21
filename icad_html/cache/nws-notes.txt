@@ -1,0 +1,15 @@
+Script characteristics on last page load:
+Last update: Sun 04-03-2022 14:20 EDT
+nws-alerts.php - V1.43 - 14-May-2019
+2 unique Zone entries found. Zones='PAC015,PAZ038'
+Cron job enabled
+XML source: https://alerts.weather.gov/cap/wwaatmget.php?x=PAC015&y=1
+HTTP stats:  RC=200 dest=2600:141b:f000:c09e::116 port=443 (from sce=2603:7080:103d:4a6a::1287)
+      Times: dns=0.040 conn=0.065 pxfer=0.327 get=0.079 total=0.406 secs
+XML source: https://alerts.weather.gov/cap/wwaatmget.php?x=PAZ038&y=1
+HTTP stats:  RC=200 dest=2600:141b:f000:c09e::116 port=443 (from sce=2603:7080:103d:4a6a::1287)
+      Times: dns=0.001 conn=0.031 pxfer=0.353 get=0.078 total=0.430 secs
+Cache file updated: Sun 04-3-2022 2:20 pm
+Alert box data file updated
+Icon data file updated
+Total process time: 0.8398 seconds

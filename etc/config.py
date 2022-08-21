@@ -25,6 +25,12 @@ broadcastify_calls_settings = {
     "calls_slot": "1"
 }
 
+mp3_remove_silence_settings = {
+    "enabled": 0,
+    "min_silence_length": 8000,
+    "silence_threshold": -40
+}
+
 mp3_append_text2speech_settings = {
     "enabled": 0,
     "speech_rate": 125
