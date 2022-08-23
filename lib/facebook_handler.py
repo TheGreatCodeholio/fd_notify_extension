@@ -9,12 +9,13 @@ import etc.config as config
 # create logger
 module_logger = logging.getLogger('fd_tone_notify_extension.facebook')
 
-def send_post(timestamp, tone_name, audio_link, audio_path):
+
+def send_post(timestamp, tone_name, tone_data, audio_link, audio_path):
     module_logger.info("Posting to Facebook Page")
     tone_name = tone_name.replace("\"", "")
     service = "facebook"
     timestamp = datetime.datetime.fromtimestamp(timestamp)
-    RedisCache().add_call_to_redis(service, tone_name, audio_link, audio_path)
+    RedisCache().add_call_to_redis(service, tone_name, tone_data, audio_link, audio_path)
     module_logger.debug("Waiting for additional tones from same call.")
     time.sleep(config.facebook_page_settings["call_wait_time"])
     calls_result = RedisCache().get_all_call(service)
@@ -26,7 +27,7 @@ def send_post(timestamp, tone_name, audio_link, audio_path):
                                                           timestamp.strftime("%b %d %Y"))
                 for call in calls_result:
                     data = json.loads(str(calls_result[call].decode('utf-8')))
-                    message += " " + str(data["call_department_number"])
+                    message += " " + str(data["call_tone_data"]["department_number"])
                 RedisCache().delete_all_calls(service)
                 message += "\n\n"
                 message += "Dispatch Audio: " + str(audio_link)
@@ -36,8 +37,9 @@ def send_post(timestamp, tone_name, audio_link, audio_path):
 
             elif len(calls_result) == 1:
                 RedisCache().delete_all_calls(service)
-                message = "{}:{} {}\n{}\n\n".format(timestamp.strftime("%H"), timestamp.strftime("%M"), timestamp.strftime("%b %d %Y"),
-                                                    tone_name)
+                message = "{}:{} {}\n{}\n\n".format(timestamp.strftime("%H"), timestamp.strftime("%M"),
+                                                    timestamp.strftime("%b %d %Y"),
+                                                    tone_name + tone_data["department_number"])
                 message += "Dispatch Audio: " + str(audio_link) + "\n"
                 facebook_pages = config.facebook_page_settings["facebook_page_ids"]
                 for page in facebook_pages:

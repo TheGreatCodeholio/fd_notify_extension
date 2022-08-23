@@ -107,7 +107,7 @@ def add_external_command():
     for detector in fd_data["detection"]["detectors"]:
         detector_pre = [
             {
-                "command": "python3 " + config.fd_tone_notify_extension_path + "pre_record.py \"[detectorName]\" [custom]",
+                "command": "cd " + config.fd_tone_notify_extension_path + " && python3 pre_record.py \"[detectorName]\" [custom]",
                 "description": "fd_extension",
                 "custom": {
                     "department_number": "",
@@ -120,7 +120,7 @@ def add_external_command():
         ]
         detector_post = [
             {
-                "command": "python3 " + config.fd_tone_notify_extension_path + "post_record.py [timestamp] \"[detectorName]\" [recordingRelPath] [custom]",
+                "command": "cd " + config.fd_tone_notify_extension_path + " && python3 post_record.py [timestamp] \"[detectorName]\" [recordingRelPath] [custom]",
                 "description": "fd_extension",
                 "custom": {
                     "department_number": "",
@@ -145,7 +145,7 @@ def add_external_command():
 
 
 def generate_mqtt_config():
-    fd_config = open(config.fd_tone_notify_path + 'var/config/default.json')
+    fd_config = open(config.fd_tone_notify_path + 'config/default.json')
     fd_data = json.load(fd_config)
 
     mqtt_client_config = open(config.fd_tone_notify_extension_path + 'etc/mqtt_client_config.json')

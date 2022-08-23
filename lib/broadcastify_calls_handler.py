@@ -1,11 +1,15 @@
 import os
 import logging
+import time
+import datetime
 
 import urllib3
 from pydub import AudioSegment
 import etc.config as config
 
 # create logger
+from lib.redis_handler import RedisCache
+
 module_logger = logging.getLogger('fd_tone_notify_extension.broadcastify_calls')
 
 
@@ -18,14 +22,38 @@ module_logger = logging.getLogger('fd_tone_notify_extension.broadcastify_calls')
 # read m4a file as data
 # put m4a file to the url
 
+def queue_call(timestamp, tone_name, tone_data, audio_link, audio_path_wav):
+    module_logger.info("Queueing For Broadcastify Calls")
+    tone_name = tone_name.replace("\"", "")
+    service = "bcfy"
+    timestamp = datetime.datetime.fromtimestamp(timestamp)
+    RedisCache().add_call_to_redis(service, tone_name, tone_data, audio_link, audio_path_wav)
+    module_logger.debug("Waiting for additional tones from same call.")
+    time.sleep(config.facebook_page_settings["call_wait_time"])
+    calls_result = RedisCache().get_all_call(service)
+    if calls_result:
+        working_call = calls_result[tone_name.encode('utf-8')]
+        if working_call:
+            if len(calls_result) >= 2:
+                RedisCache().delete_all_calls(service)
+                post_call(timestamp, audio_path_wav)
+
+            else:
+                RedisCache().delete_all_calls(service)
+                post_call(timestamp, audio_path_wav)
+
+            return
+    else:
+        module_logger.debug(tone_name + " part of another call. Not Posting.")
+
 
 def post_call(timestamp, wav_file_path):
     module_logger.info("Uploading to Broadcastify Calls")
 
     wav_audio = AudioSegment.from_file(wav_file_path)
     wav_audio.export(wav_file_path.replace(".wav", ".m4a"), format="mp4",
-                       parameters=["-af", "aresample=resampler=soxr", "-ar", "22050", "-c:a", "aac", "-b:a", "32k",
-                                   "-cutoff", "18000"])
+                     parameters=["-af", "aresample=resampler=soxr", "-ar", "22050", "-c:a", "aac", "-b:a", "32k",
+                                 "-cutoff", "18000"])
 
     mp4_path = wav_file_path.replace(".wav", ".m4a")
     mp4_audio = AudioSegment.from_file(mp4_path)

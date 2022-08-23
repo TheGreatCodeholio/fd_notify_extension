@@ -10,12 +10,12 @@ import etc.config as config
 module_logger = logging.getLogger('fd_tone_notify_extension.twitter')
 
 
-def send_tweet(tone_name, audio_link, audio_path):
+def send_tweet(tone_name, tone_data, audio_link, audio_path):
     module_logger.info("Posting to Twitter")
     service = "twitter"
     tone_name = tone_name.replace("\"", "")
     now = datetime.datetime.now()
-    RedisCache().add_call_to_redis(service, tone_name, audio_link, audio_path)
+    RedisCache().add_call_to_redis(service, tone_name, tone_data, audio_link, audio_path)
     module_logger.debug("Waiting for additional tones from same call.")
     time.sleep(config.twitter_settings["call_wait_time"])
     calls_result = RedisCache().get_all_call(service)
@@ -27,7 +27,7 @@ def send_tweet(tone_name, audio_link, audio_path):
                                                           now.strftime("%b %d %Y"))
                 for call in calls_result:
                     data = json.loads(str(calls_result[call].decode('utf-8')))
-                    message += " " + str(data["call_department_number"])
+                    message += " " + str(data["call_tone_data"]["department_number"])
                 RedisCache().delete_all_calls(service)
                 message += "\n\n"
                 message += "Dispatch Audio: " + str(audio_link)
@@ -36,7 +36,7 @@ def send_tweet(tone_name, audio_link, audio_path):
             elif len(calls_result) == 1:
                 RedisCache().delete_all_calls(service)
                 message = "{}:{} {}\n{}\n\n".format(now.strftime("%H"), now.strftime("%M"), now.strftime("%b %d %Y"),
-                                                    tone_name)
+                                                    tone_name + tone_data["department_number"])
                 message += "Dispatch Audio: " + str(audio_link) + "\n"
                 post_to_twitter(message)
 

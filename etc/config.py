@@ -19,10 +19,23 @@ mqtt_settings = {
 
 broadcastify_calls_settings = {
     "enabled": 0,
+    "call_wait_time": 70,
     "calls_api_key": "",
     "calls_system_id": "",
     "calls_frequency": "",
     "calls_slot": "1"
+}
+
+discord_settings = {
+    "enabled": 0,
+    "call_wait_time": 70,
+    "voice": 0,
+    "text": 0,
+    "client_url": "http://localhost:5000",
+    "discord_bot_token": "",
+    "discord_server_id": 0,
+    "discord_text_channel_id": 0,
+    "discord_voice_channel_id": 0
 }
 
 mp3_remove_silence_settings = {

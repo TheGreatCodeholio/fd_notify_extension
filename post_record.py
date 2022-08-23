@@ -107,7 +107,7 @@ try:
     if config.broadcastify_calls_settings["enabled"] == 1:
         logger.debug("Broadcastify Calls Enabled")
         bcfy = Thread(target=broadcastify.post_call,
-                      args=(int(ts), local_audio_path + mp3_new_name.replace(".mp3", ".wav")))
+                      args=(int(ts), tone_name.lower().replace(" ", "_"), tone_data, mp3_url, local_audio_path + mp3_new_name.replace(".mp3", ".wav")))
         bcfy.start()
         threads.append(bcfy)
     else:
@@ -132,7 +132,7 @@ try:
     if config.facebook_page_settings["enabled"] == 1:
         logger.debug("Facebook Page Post Enabled")
         # Post to Facebook Group
-        fb = Thread(target=fbook.send_post, args=(ts, args.tone_name, mp3_url, mp3_local_path))
+        fb = Thread(target=fbook.send_post, args=(ts, args.tone_name, args.department_info, mp3_url, mp3_local_path))
         fb.start()
         threads.append(fb)
     else:
@@ -141,7 +141,7 @@ try:
     if config.twitter_settings["enabled"] == 1:
         logger.debug("Twitter Enabled")
         # Post to Twitter
-        tr = Thread(target=twitter.send_tweet, args=(args.tone_name, mp3_url, mp3_local_path))
+        tr = Thread(target=twitter.send_tweet, args=(args.tone_name, args.department_info, mp3_url, mp3_local_path))
         tr.start()
         threads.append(tr)
     else:
