@@ -24,7 +24,8 @@ def send_audio_text(timestamp, tone_name, tone_data, audio_link, audio_path):
             if len(calls_result) >= 2:
                 # build our json data for discord bot api
                 detectors = {}
-                call_data = {"timestamp": timestamp, "mp3_url": audio_link, "detector_name": "multi", "detectors": {}}
+                call_data = {"timestamp": timestamp, "mp3_url": audio_link, "call_mp3_path": audio_path,
+                             "detector_name": "multi", "detectors": {}}
 
                 for call in calls_result:
                     data = json.loads(str(calls_result[call].decode('utf-8')))
@@ -34,8 +35,8 @@ def send_audio_text(timestamp, tone_name, tone_data, audio_link, audio_path):
 
             else:
                 RedisCache().delete_single_call(service, tone_name)
-                call_data = {"timestamp": timestamp, "mp3_url": audio_link,
-                             "detector_name": tone_name + tone_data["department_number"]}
+                call_data = {"timestamp": timestamp, "mp3_url": audio_link, "call_mp3_path": audio_path,
+                             "detector_name": tone_name + " " + tone_data["department_number"]}
 
             if config.discord_settings["text"] == 1:
                 module_logger.info("Sending Text Request To Discord Server")

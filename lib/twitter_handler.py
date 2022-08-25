@@ -36,7 +36,7 @@ def send_tweet(tone_name, tone_data, audio_link, audio_path):
             elif len(calls_result) == 1:
                 RedisCache().delete_single_call(service, tone_name)
                 message = "{}:{} {}\n{}\n\n".format(now.strftime("%H"), now.strftime("%M"), now.strftime("%b %d %Y"),
-                                                    tone_name + tone_data["department_number"])
+                                                    tone_name + " " + tone_data["department_number"])
                 message += "Dispatch Audio: " + str(audio_link) + "\n"
                 post_to_twitter(message)
 

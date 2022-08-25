@@ -39,7 +39,7 @@ def send_post(timestamp, tone_name, tone_data, audio_link, audio_path):
                 RedisCache().delete_single_call(service, tone_name)
                 message = "{}:{} {}\n{}\n\n".format(timestamp.strftime("%H"), timestamp.strftime("%M"),
                                                     timestamp.strftime("%b %d %Y"),
-                                                    tone_name + tone_data["department_number"])
+                                                    tone_name + " " + tone_data["department_number"])
                 message += "Dispatch Audio: " + str(audio_link) + "\n"
                 facebook_pages = config.facebook_page_settings["facebook_page_ids"]
                 for page in facebook_pages:
