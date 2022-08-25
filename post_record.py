@@ -18,6 +18,7 @@ from lib.audio_transcription_handler import audio_transcription
 from lib.database_handler import Database
 import lib.pushover_handler as pushover
 import lib.facebook_handler as fbook
+import lib.discord_handler as discord
 import lib.twitter_handler as twitter
 import lib.twilio_handler as twilio
 import lib.zello_handler as zello
@@ -106,12 +107,21 @@ try:
 
     if config.broadcastify_calls_settings["enabled"] == 1:
         logger.debug("Broadcastify Calls Enabled")
-        bcfy = Thread(target=broadcastify.post_call,
+        bcfy = Thread(target=broadcastify.queue_call,
                       args=(int(ts), tone_name.lower().replace(" ", "_"), tone_data, mp3_url, local_audio_path + mp3_new_name.replace(".mp3", ".wav")))
         bcfy.start()
         threads.append(bcfy)
     else:
         logger.debug("Broadcastify Calls Disabled")
+
+    if config.discord_settings["enabled"] == 1:
+        logger.debug("Discord Posting Enabled")
+        disc = Thread(target=discord.send_audio_text,
+                      args=(int(ts), args.tone_name, tone_data, mp3_url, local_audio_path + mp3_new_name))
+        disc.start()
+        threads.append(disc)
+    else:
+        logger.debug("Discord Posting Disabled")
 
     if config.twilio_settings["enabled"] == 1:
         logger.debug("Twilio SMS Enabled")

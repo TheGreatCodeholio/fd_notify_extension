@@ -11,7 +11,7 @@ def send_push(tone_name, tone_data, mp3_url):
 
     if config.pushover_settings["all_groups"] == 1:
         module_logger.debug("Sending to Pushover Group All")
-        if config.pushover_settings["all_groups_app_token"] and config.pushover_settings["all_groups_group_token"]:
+        if config.pushover_settings["all_groups_app_key"] and config.pushover_settings["all_groups_group_key"]:
             r = requests.post("https://api.pushover.net/1/messages.json", data={
                 "token": config.pushover_settings["all_groups_app_token"],
                 "user": config.pushover_settings["all_groups_group_token"],

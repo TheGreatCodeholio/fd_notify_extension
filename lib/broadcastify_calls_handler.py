@@ -39,7 +39,7 @@ def queue_call(timestamp, tone_name, tone_data, audio_link, audio_path_wav):
                 post_call(timestamp, audio_path_wav)
 
             else:
-                RedisCache().delete_all_calls(service)
+                RedisCache().delete_single_call(service, tone_name)
                 post_call(timestamp, audio_path_wav)
 
             return

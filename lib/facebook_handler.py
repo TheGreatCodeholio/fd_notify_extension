@@ -35,8 +35,8 @@ def send_post(timestamp, tone_name, tone_data, audio_link, audio_path):
                 for page in facebook_pages:
                     connect_and_post_page(message, page)
 
-            elif len(calls_result) == 1:
-                RedisCache().delete_all_calls(service)
+            else:
+                RedisCache().delete_single_call(service, tone_name)
                 message = "{}:{} {}\n{}\n\n".format(timestamp.strftime("%H"), timestamp.strftime("%M"),
                                                     timestamp.strftime("%b %d %Y"),
                                                     tone_name + tone_data["department_number"])

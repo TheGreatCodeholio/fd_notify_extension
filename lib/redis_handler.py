@@ -49,5 +49,28 @@ class RedisCache:
         else:
             return None
 
+    def delete_single_call(self, service, call_tone_name):
+        self.r.hdel("fire_calls_" + service, call_tone_name)
+
     def delete_all_calls(self, service):
         self.r.delete("fire_calls_" + service)
+
+    def add_warn_to_redis(self, warning_data):
+        self.r.hset("noaa_warn", warning_data["warn_id"], json.dumps(warning_data))
+
+    def get_warn_from_redis(self, warn_id):
+        data = self.r.hget("noaa_warn", warn_id)
+        if data is not None:
+            return json.loads(data)
+        else:
+            return False
+
+    def get_all_warn_from_redis(self):
+        data = self.r.hgetall("noaa_warn")
+        if data is not None:
+            return data
+        else:
+            return False
+
+    def rem_warn_from_redis(self, warn_id):
+        self.r.hdel("noaa_warn", warn_id)

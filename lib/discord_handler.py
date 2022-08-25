@@ -30,10 +30,12 @@ def send_audio_text(timestamp, tone_name, tone_data, audio_link, audio_path):
                     data = json.loads(str(calls_result[call].decode('utf-8')))
                     detectors[data["call_tone_name"]] = data["call_tone_data"]["department_number"]
 
-            else:
-                call_data = {"timestamp": timestamp, "mp3_url": audio_link, "detector_name": tone_name + tone_data["department_number"]}
+                RedisCache().delete_all_calls(service)
 
-            RedisCache().delete_all_calls(service)
+            else:
+                RedisCache().delete_single_call(service, tone_name)
+                call_data = {"timestamp": timestamp, "mp3_url": audio_link,
+                             "detector_name": tone_name + tone_data["department_number"]}
 
             if config.discord_settings["text"] == 1:
                 module_logger.info("Sending Text Request To Discord Server")
@@ -54,3 +56,5 @@ def send_audio_text(timestamp, tone_name, tone_data, audio_link, audio_path):
             return
     else:
         module_logger.debug(tone_name + " part of another call. Not Posting.")
+
+

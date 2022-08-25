@@ -55,8 +55,10 @@ async def text_post():
     if request.is_json:
         data = await request.get_json()
         timestamp = datetime.datetime.fromtimestamp(data["timestamp"])
-        embed = discord.Embed(title="🚨 Dispatch Alert 🚨", description="Click for Dispatch Audio", colour=discord.Colour(0xcb151e), url=f'{data["mp3_url"]}')
-        embed.add_field(name=f"Time: ", value=f'{timestamp.strftime("%H")}:{timestamp.strftime("%M")} {timestamp.strftime("%b %d %Y")}')
+        embed = discord.Embed(title="🚨 Dispatch Alert 🚨", description="Click for Dispatch Audio",
+                              colour=discord.Colour(0xcb151e), url=f'{data["mp3_url"]}')
+        embed.add_field(name=f"Time: ",
+                        value=f'{timestamp.strftime("%H")}:{timestamp.strftime("%M")} {timestamp.strftime("%b %d %Y")}')
         if data["detector_name"] == "multi":
             detectors = ""
             for det in data["detectors"]:
@@ -64,6 +66,25 @@ async def text_post():
             embed.add_field(name=f"Departments:", value=detectors)
         else:
             embed.add_field(name=f"Department:", value=data["detector_name"])
+        text_channel = client.get_channel(config.discord_settings["discord_text_channel"])
+        await text_channel.send(embed=embed)
+        return 'Posted', 200
+    else:
+        return 'Failed', 403
+
+
+@app.route('/noaa', methods=['POST'])
+async def noaa_text_post():
+    if request.is_json:
+        alert_data = await request.get_json()
+        embed = discord.Embed(title="⚠️ Weather Alert ⚠️", description="Click for Detailed Summary",
+                              colour=discord.Colour(0xcb151e), url=f'{config.base_url + "/wx_summary.php"}')
+        embed.add_field(name=f'Type', value=f'{alert_data["event"]}', inline=False)
+        embed.add_field(name=f'Urgency', value=f'{alert_data["urgency"]}', inline=False)
+        embed.add_field(name=f'Certainty', value=f'{alert_data["certainty"]}', inline=False)
+        embed.add_field(name=f'Expires', value=f'{alert_data["expires_hrt"]}', inline=False)
+        embed.add_field(name=f'Link', value=f'{config.base_url + "/wx_summary.php"}', inline=False)
+        embed.add_field(name=f'Summary', value=f'{alert_data["summary"]}', inline=False)
         text_channel = client.get_channel(config.discord_settings["discord_text_channel"])
         await text_channel.send(embed=embed)
         return 'Posted', 200

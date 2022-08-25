@@ -2,7 +2,8 @@
 fd_tone_notify_path = ""
 fd_tone_notify_extension_path = ""
 local_audio_path = ""
-audio_url_path = ""
+base_url = "https://bcfirewire.com"
+audio_url_path = base_url + "/audio"
 
 # Logger Settings
 logger = {
@@ -36,6 +37,10 @@ discord_settings = {
     "discord_server_id": 0,
     "discord_text_channel_id": 0,
     "discord_voice_channel_id": 0
+}
+
+noaa_warn = {
+    "zone": "PAC015"
 }
 
 mp3_remove_silence_settings = {
