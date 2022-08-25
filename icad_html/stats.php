@@ -40,7 +40,7 @@ if (!isset($_GET['time'])) {
     } elseif ($_GET['time'] == "month"){
         $timeframe = "Month";
         $calls_list_sql = "SELECT * FROM fd_notify_detections WHERE MONTH(detection_timestamp) = MONTH(CURDATE()) AND YEAR(detection_timestamp) = YEAR(CURDATE()) ORDER BY detection_timestamp DESC LIMIT $start_from," . $results_per_page;
-        $most_calls_sql = "SELECT detection_tone_name, detection_timestamp, COUNT(*) AS total FROM fd_notify_detections WHERE MONTH(CURDATE()) AND YEAR(detection_timestamp) = YEAR(CURDATE()) GROUP BY detection_tone_name ORDER BY total DESC LIMIT 5";
+        $most_calls_sql = "SELECT detection_tone_name, detection_timestamp, COUNT(*) AS total FROM fd_notify_detections WHERE MONTH(detection_timestamp) = MONTH(CURDATE()) AND YEAR(detection_timestamp) = YEAR(CURDATE()) GROUP BY detection_tone_name ORDER BY total DESC LIMIT 5";
         $total_calls_sql = "SELECT COUNT(*) AS total FROM fd_notify_detections WHERE MONTH(detection_timestamp) = MONTH(CURDATE()) AND YEAR(detection_timestamp) = YEAR(CURDATE())";
 
     } elseif ($_GET['time'] == "year"){
