@@ -36,7 +36,7 @@ async def voice_post():
         if queue_total >= 3:
             return 'queue full', 666
         if voice_client is None:
-            vc = client.get_channel(config.discord_settings["discord_voice_channel"])
+            vc = client.get_channel(config.discord_settings["discord_voice_channel_id"])
             voice_client = await vc.connect()
         if not voice_client.is_playing():
             voice_client.play(discord.FFmpegPCMAudio(call_mp3_path))
@@ -62,11 +62,11 @@ async def text_post():
         if data["detector_name"] == "multi":
             detectors = ""
             for det in data["detectors"]:
-                detectors += str(data["detectors"][det])
+                detectors += str(det + " " + data["detectors"][det] + "\n")
             embed.add_field(name=f"Departments:", value=detectors)
         else:
             embed.add_field(name=f"Department:", value=data["detector_name"])
-        text_channel = client.get_channel(config.discord_settings["discord_text_channel"])
+        text_channel = client.get_channel(config.discord_settings["discord_text_channel_id"])
         await text_channel.send(embed=embed)
         return 'Posted', 200
     else:
@@ -85,7 +85,7 @@ async def noaa_text_post():
         embed.add_field(name=f'Expires', value=f'{alert_data["expires_hrt"]}', inline=False)
         embed.add_field(name=f'Link', value=f'{config.base_url + "/wx_summary.php"}', inline=False)
         embed.add_field(name=f'Summary', value=f'{alert_data["summary"]}', inline=False)
-        text_channel = client.get_channel(config.discord_settings["discord_text_channel"])
+        text_channel = client.get_channel(config.discord_settings["discord_text_channel_id"])
         await text_channel.send(embed=embed)
         return 'Posted', 200
     else:

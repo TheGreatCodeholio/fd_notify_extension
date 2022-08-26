@@ -167,7 +167,7 @@ try:
     if config.discord_settings["enabled"] == 1:
         logger.debug("Discord Posting Enabled")
         disc = Thread(target=discord.send_audio_text,
-                      args=(int(ts), args.tone_name, tone_data, mp3_url, local_audio_path + mp3_new_name))
+                      args=(int(ts), tone_name, tone_data, mp3_url, local_audio_path + mp3_new_name))
         disc.start()
         threads.append(disc)
     else:
@@ -176,7 +176,7 @@ try:
     if config.facebook_page_settings["enabled"] == 1:
         logger.debug("Facebook Page Post Enabled")
         # Post to Facebook Group
-        fb = Thread(target=fbook.send_post, args=(ts, args.tone_name, args.department_info, mp3_url, mp3_local_path))
+        fb = Thread(target=fbook.send_post, args=(ts, tone_name, tone_data, mp3_url, mp3_local_path))
         fb.start()
         threads.append(fb)
     else:
@@ -185,7 +185,7 @@ try:
     if config.twitter_settings["enabled"] == 1:
         logger.debug("Twitter Enabled")
         # Post to Twitter
-        tr = Thread(target=twitter.send_tweet, args=(args.tone_name, args.department_info, mp3_url, mp3_local_path))
+        tr = Thread(target=twitter.send_tweet, args=(tone_name, tone_data, mp3_url, mp3_local_path))
         tr.start()
         threads.append(tr)
     else:

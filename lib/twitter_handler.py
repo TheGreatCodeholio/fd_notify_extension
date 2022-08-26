@@ -23,11 +23,11 @@ def send_tweet(tone_name, tone_data, audio_link, audio_path):
         working_call = calls_result[tone_name.encode('utf-8')]
         if working_call:
             if len(calls_result) >= 2:
-                message = "{}:{} {}\nDepartments:".format(now.strftime("%H"), now.strftime("%M"),
+                message = "{}:{} {}\nDepartments: ".format(now.strftime("%H"), now.strftime("%M"),
                                                           now.strftime("%b %d %Y"))
                 for call in calls_result:
                     data = json.loads(str(calls_result[call].decode('utf-8')))
-                    message += " " + str(data["call_tone_data"]["department_number"])
+                    message += str(data["call_tone_name"] + " " + data["call_department_number"] + "\n")
                 RedisCache().delete_all_calls(service)
                 message += "\n\n"
                 message += "Dispatch Audio: " + str(audio_link)

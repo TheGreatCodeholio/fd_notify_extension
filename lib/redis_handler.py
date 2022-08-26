@@ -31,7 +31,7 @@ class RedisCache:
     def add_call_to_redis(self, service, call_tone_name, call_tone_data, call_mp3_url, call_mp3_path):
         call_data = {"call_tone_name": call_tone_name, "call_tone_data": call_tone_data, "call_mp3_url": call_mp3_url,
                      "call_mp3_path": call_mp3_path, "call_time": time.time(),
-                     "call_department_number": call_tone_name[-2:].replace(" ", "")}
+                     "call_department_number": call_tone_data["department_number"]}
         self.r.hset("fire_calls_" + service, call_tone_name, json.dumps(call_data))
 
     def get_single_call(self, service, call_tone_name):
