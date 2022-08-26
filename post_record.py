@@ -100,62 +100,9 @@ try:
 
     if config.mp3_remove_silence_settings["enabled"] == 1:
         logger.debug("Remove Silence Enabled")
-        mp3.remove_silence(int(ts), tone_name.lower().replace(" ", "_"),
-                           local_audio_path + mp3_new_name.replace(".mp3", ".wav"))
+        mp3.remove_silence(local_audio_path + mp3_new_name.replace(".mp3", ".wav"))
     else:
         logger.debug("Remove Silence Disabled")
-
-    if config.broadcastify_calls_settings["enabled"] == 1:
-        logger.debug("Broadcastify Calls Enabled")
-        bcfy = Thread(target=broadcastify.queue_call,
-                      args=(int(ts), tone_name.lower().replace(" ", "_"), tone_data, mp3_url, local_audio_path + mp3_new_name.replace(".mp3", ".wav")))
-        bcfy.start()
-        threads.append(bcfy)
-    else:
-        logger.debug("Broadcastify Calls Disabled")
-
-    if config.discord_settings["enabled"] == 1:
-        logger.debug("Discord Posting Enabled")
-        disc = Thread(target=discord.send_audio_text,
-                      args=(int(ts), args.tone_name, tone_data, mp3_url, local_audio_path + mp3_new_name))
-        disc.start()
-        threads.append(disc)
-    else:
-        logger.debug("Discord Posting Disabled")
-
-    if config.twilio_settings["enabled"] == 1:
-        logger.debug("Twilio SMS Enabled")
-        tw = Thread(target=twilio.create_twilio_sms, args=(tone_name, tone_data, mp3_url))
-        tw.start()
-        threads.append(tw)
-    else:
-        logger.debug("Twilio SMS Calls Disabled")
-
-    if config.pushover_settings["enabled"] == 1:
-        logger.debug("Pushover Enabled")
-        po = Thread(target=pushover.send_push, args=(tone_name, tone_data, mp3_url))
-        po.start()
-        threads.append(po)
-    else:
-        logger.debug("Pushover Disabled")
-
-    if config.facebook_page_settings["enabled"] == 1:
-        logger.debug("Facebook Page Post Enabled")
-        # Post to Facebook Group
-        fb = Thread(target=fbook.send_post, args=(ts, args.tone_name, args.department_info, mp3_url, mp3_local_path))
-        fb.start()
-        threads.append(fb)
-    else:
-        logger.debug("Facebook Page Post Disabled")
-
-    if config.twitter_settings["enabled"] == 1:
-        logger.debug("Twitter Enabled")
-        # Post to Twitter
-        tr = Thread(target=twitter.send_tweet, args=(args.tone_name, args.department_info, mp3_url, mp3_local_path))
-        tr.start()
-        threads.append(tr)
-    else:
-        logger.debug("Twitter Disabled")
 
     # Mp3 Manipulation In order: append text2speech -> append file -> stereo -> low pass -> high pass -> gain
     if config.mp3_append_text2speech_settings["enabled"] == 1:
@@ -164,7 +111,7 @@ try:
     else:
         logger.debug("Append Tone Name Audio Disabled")
 
-    if tone_data["mp3_append_file"]:
+    if config.mp3_append_audio_file_settings["enabled"] == 1 and tone_data["mp3_append_file"]:
         logger.debug("Append Audio File Enabled")
         mp3.append_audio_file(tone_name, mp3_local_path, tone_data)
     else:
@@ -194,14 +141,6 @@ try:
     else:
         logger.debug("Gain Filter Disabled")
 
-    if config.zello_settings["enabled"] == 1:
-        logger.debug("Zello Enabled")
-        zl = Thread(target=zello_init, args=(config, mp3_local_path))
-        zl.start()
-        threads.append(zl)
-    else:
-        logger.debug("Zello Disabled")
-
     # Upload MP3 to remote webserver
     if config.sftp_settings["enabled"] == 1:
         logger.debug("SFTP Enabled")
@@ -215,6 +154,66 @@ try:
         Database().add_new_call(ts, tone_name, tone_data, mp3_url)
     else:
         logger.debug("MySQL Enabled")
+
+    if config.broadcastify_calls_settings["enabled"] == 1:
+        logger.debug("Broadcastify Calls Enabled")
+        bcfy = Thread(target=broadcastify.queue_call,
+                      args=(int(ts), tone_name.lower().replace(" ", "_"), tone_data, mp3_url, local_audio_path + mp3_new_name.replace(".mp3", ".wav")))
+        bcfy.start()
+        threads.append(bcfy)
+    else:
+        logger.debug("Broadcastify Calls Disabled")
+
+    if config.discord_settings["enabled"] == 1:
+        logger.debug("Discord Posting Enabled")
+        disc = Thread(target=discord.send_audio_text,
+                      args=(int(ts), args.tone_name, tone_data, mp3_url, local_audio_path + mp3_new_name))
+        disc.start()
+        threads.append(disc)
+    else:
+        logger.debug("Discord Posting Disabled")
+
+    if config.facebook_page_settings["enabled"] == 1:
+        logger.debug("Facebook Page Post Enabled")
+        # Post to Facebook Group
+        fb = Thread(target=fbook.send_post, args=(ts, args.tone_name, args.department_info, mp3_url, mp3_local_path))
+        fb.start()
+        threads.append(fb)
+    else:
+        logger.debug("Facebook Page Post Disabled")
+
+    if config.twitter_settings["enabled"] == 1:
+        logger.debug("Twitter Enabled")
+        # Post to Twitter
+        tr = Thread(target=twitter.send_tweet, args=(args.tone_name, args.department_info, mp3_url, mp3_local_path))
+        tr.start()
+        threads.append(tr)
+    else:
+        logger.debug("Twitter Disabled")
+
+    if config.twilio_settings["enabled"] == 1:
+        logger.debug("Twilio SMS Enabled")
+        tw = Thread(target=twilio.create_twilio_sms, args=(tone_name, tone_data, mp3_url))
+        tw.start()
+        threads.append(tw)
+    else:
+        logger.debug("Twilio SMS Calls Disabled")
+
+    if config.pushover_settings["enabled"] == 1:
+        logger.debug("Pushover Enabled")
+        po = Thread(target=pushover.send_push, args=(tone_name, tone_data, mp3_url))
+        po.start()
+        threads.append(po)
+    else:
+        logger.debug("Pushover Disabled")
+
+    if config.zello_settings["enabled"] == 1:
+        logger.debug("Zello Enabled")
+        zl = Thread(target=zello_init, args=(config, mp3_local_path))
+        zl.start()
+        threads.append(zl)
+    else:
+        logger.debug("Zello Disabled")
 
     if config.speech_to_text["enabled"] == 1 and config.mysql_settings["enabled"] == 1:
         logger.debug("Speech to Text Enabled")

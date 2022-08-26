@@ -3,7 +3,7 @@ fd_tone_notify_path = ""
 fd_tone_notify_extension_path = ""
 local_audio_path = ""
 base_url = "https://bcfirewire.com"
-audio_url_path = base_url + "/audio"
+audio_url_path = base_url + "/audio/"
 
 # Logger Settings
 logger = {
@@ -45,8 +45,8 @@ noaa_warn = {
 
 mp3_remove_silence_settings = {
     "enabled": 0,
-    "min_silence_length": 8000,
-    "silence_threshold": -40
+    "min_silence_length": 6,
+    "silence_threshold": -35
 }
 
 mp3_append_text2speech_settings = {
