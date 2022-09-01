@@ -18,6 +18,7 @@ from lib.audio_transcription_handler import audio_transcription
 from lib.database_handler import Database
 import lib.pushover_handler as pushover
 import lib.facebook_handler as fbook
+import lib.telegram_handler as tgram
 import lib.discord_handler as discord
 import lib.twitter_handler as twitter
 import lib.twilio_handler as twilio
@@ -181,6 +182,15 @@ try:
         threads.append(fb)
     else:
         logger.debug("Facebook Page Post Disabled")
+
+    if config.telegram_settings["enabled"] == 1:
+        logger.debug("Telegram Channel Post Enabled")
+        # Post to Facebook Group
+        tg = Thread(target=tgram.post_to_telegram, args=(ts, tone_name, tone_data, mp3_url, mp3_local_path))
+        tg.start()
+        threads.append(tg)
+    else:
+        logger.debug("Telegram Channel Post Disabled")
 
     if config.twitter_settings["enabled"] == 1:
         logger.debug("Twitter Enabled")

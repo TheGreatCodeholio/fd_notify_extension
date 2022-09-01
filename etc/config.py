@@ -119,6 +119,13 @@ facebook_page_settings = {
     "facebook_page_ids": [0000000000, 9980000000]
 }
 
+telegram_settings = {
+    "enabled": 0,
+    "call_wait_time": 70,
+    "telegram_bot_token": "",
+    "telegram_channel_ids": [0000000000, 9980000000]
+}
+
 twitter_settings = {
     "enabled": 0,
     "call_wait_time": 70,

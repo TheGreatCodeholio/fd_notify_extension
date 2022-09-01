@@ -13,6 +13,7 @@ logger = logging.getLogger('fd_tone_notify_extension')
 logger.setLevel(logging.DEBUG)
 # create file handler which logs even debug messages
 fh = logging.FileHandler(config.fd_tone_notify_extension_path + 'var/log/fd_tone_notify_extension_pre.log')
+
 if config.logger["debug"] == 1:
     fh.setLevel(logging.DEBUG)
 else:
