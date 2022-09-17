@@ -107,7 +107,7 @@ def add_external_command():
     for detector in fd_data["detection"]["detectors"]:
         detector_pre = [
             {
-                "command": "cd " + config.fd_tone_notify_extension_path + " && python3 pre_record.py \"[detectorName]\" [custom]",
+                "command": "python3 " + config.fd_tone_notify_extension_path + "pre_record.py \"[detectorName]\" [custom]",
                 "description": "fd_extension",
                 "custom": {
                     "department_number": "",
@@ -120,7 +120,7 @@ def add_external_command():
         ]
         detector_post = [
             {
-                "command": "cd " + config.fd_tone_notify_extension_path + " && python3 post_record.py [timestamp] \"[detectorName]\" [recordingRelPath] [custom]",
+                "command": "python3  " + config.fd_tone_notify_extension_path + "post_record.py [timestamp] \"[detectorName]\" [recordingRelPath] [custom]",
                 "description": "fd_extension",
                 "custom": {
                     "department_number": "",
