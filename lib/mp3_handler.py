@@ -29,15 +29,20 @@ def append_text2speech_audio(tone_name, mp3_file, local_audio_path):
 
 def remove_silence(wav_file_path):
     module_logger.info("Removing Silence From Audio")
-    command = "ffmpeg -y -i " + wav_file_path + " -af silenceremove=stop_periods=-1:stop_threshold=" + str(
+    temp_wav_file_path = wav_file_path + ".tmp"
+    os.replace(wav_file_path, temp_wav_file_path)
+    command = "ffmpeg -y -i " + temp_wav_file_path + " -af silenceremove=stop_periods=-1:stop_threshold=" + str(
         config.mp3_remove_silence_settings["silence_threshold"]) + "dB:stop_duration=" + str(
         config.mp3_remove_silence_settings["min_silence_length"]) + " " + wav_file_path
     subprocess.run(command.split(), capture_output=True)
+    os.remove(temp_wav_file_path)
 
-    command = "ffmpeg -y -i " + wav_file_path.replace(".wav", ".mp3") + " -af silenceremove=stop_periods=-1:stop_threshold=" + str(
+    os.replace(wav_file_path.replace(".wav", ".mp3"), temp_wav_file_path.replace(".wav", ".mp3"))
+    command = "ffmpeg -y -i " + temp_wav_file_path.replace(".wav", ".mp3") + " -af silenceremove=stop_periods=-1:stop_threshold=" + str(
         config.mp3_remove_silence_settings["silence_threshold"]) + "dB:stop_duration=" + str(
         config.mp3_remove_silence_settings["min_silence_length"]) + " " + wav_file_path.replace(".wav", ".mp3")
     subprocess.run(command.split(), capture_output=True)
+    os.remove(temp_wav_file_path.replace(".wav", ".mp3"))
 
 
 def convert_stereo(tone_name, file):
