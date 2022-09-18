@@ -62,7 +62,7 @@ def convert_ttd():
                     "webhooks": [],
                     "externalCommands": [
                         {
-                            "command": "python3  " + config.fd_tone_notify_extension_path + "post_record.py [timestamp] \"[detectorName]\" [recordingRelPath] [custom]",
+                            "command": "python3 " + config.fd_tone_notify_extension_path + "post_record.py [timestamp] \"[detectorName]\" [recordingRelPath] [custom]",
                             "description": "fd_extension",
                             "custom": {
                                 "department_number": "",
